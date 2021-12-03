@@ -9,21 +9,24 @@ namespace Day03
         {
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-
-            string[] lines = File.ReadAllLines(projectDirectory + "\\Sample.txt");
+            string currentFile = projectDirectory + "\\Sample.txt";
+            string[] lines = File.ReadAllLines(currentFile);
 
             Console.WriteLine("Test data should return 198");
             Console.WriteLine("Test Data: " + DayOnePowerConsumption(lines));
+
+            currentFile = projectDirectory + "\\Input.txt";
+            lines = File.ReadAllLines(currentFile);
+            Console.WriteLine("Day 3 - Part 1 Answer: " + DayOnePowerConsumption(lines));
         }
 
         static int DayOnePowerConsumption(string[] lines)
         {
             int[] Zeroes = new int[lines[0].Length];
-            int[] Ones = new int[lines[0].Length];
+   
             for (int i=0; i < Zeroes.Length; i++)
             {
                 Zeroes[i] = 0;
-                Ones[i] = 0;
             }
             foreach(string line in lines)
             {
@@ -33,15 +36,25 @@ namespace Day03
                     if (bit == '0')
                     {
                         Zeroes[i]++;
-                    } else
-                    {
-                        Ones[i]++;
                     }
                     i++;
                 }
             }
-            Console.WriteLine(Zeroes);
-            return 0;
+            string  gamma = "";
+            string epsilon = "";
+            for (int i=0; i < Zeroes.Length; i++)
+            {
+                if (Zeroes[i] > (lines.Length / 2))
+                {
+                    gamma += "0";
+                    epsilon += "1";
+                } else
+                {
+                    gamma += "1";
+                    epsilon += "0";
+                }
+            }
+            return Convert.ToInt32(gamma, 2) * Convert.ToInt32(epsilon, 2);
         }
     }
 
