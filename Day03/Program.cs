@@ -102,15 +102,11 @@ namespace Day03
             }
             //reset lines back to original set of data to calculate CO2 Scrubber Rating
             possibleChoices = new List<string>(lines);
+            zeroes = CountZeroes(lines);
             ptr = 0;
             while (ptr < lines[0].Length)
             {
                 char leastCommon = zeroes[ptr] <= (possibleChoices.Count / 2) ? '0' : '1';
-                Console.WriteLine("ptr value: " + ptr + ", leastCommon: " + leastCommon + ", list count: " + possibleChoices.Count);
-                if (possibleChoices.Count <= 10)
-                {
-                    possibleChoices.ForEach(c => Console.WriteLine(c));
-                }
                 List<string> temp = possibleChoices.FindAll(l => l[ptr] == leastCommon);
                 if (temp.Count > 0)
                 {
