@@ -4,17 +4,17 @@ using System.IO;
 
 namespace Day04
 {
-    class Board
+    public class Board
     {
-        List<List<string>> board = new List<List<string>>();
-        Board(List<string> _board)
+        private List<List<string>> _board = new List<List<string>>();
+        public Board(List<string> board)
         {
-            _board.ForEach(line => board.Add(new List<string>(line.Split(' '))));
+            board.ForEach(line => _board.Add(new List<string>(line.Split(' '))));
         }
 
         public void PrintBoard()
         {
-            board.ForEach(line => line.ForEach(entry => Console.Write(entry + " ")));
+            _board.ForEach(line => line.ForEach(entry => Console.Write(entry + " ")));
         }
 
         public bool CheckBoard(string number)
@@ -33,7 +33,25 @@ namespace Day04
             List<string> lines = new List<String>(File.ReadAllLines(currentFile));
             string instructions = lines[0];
             lines.RemoveAt(0);
-            lines.ForEach(line => Console.WriteLine(line));
+            Board newBoard;
+            List<string> input = new List<string>();
+            foreach (string line in lines)
+            {
+
+                if (line == "")
+                {   
+                    if (input.Count > 0)
+                    {
+                        newBoard = new Board(input);
+                        Console.WriteLine("New Board:");
+                        newBoard.PrintBoard();
+                        input.Clear();
+                    }
+                } else
+                {
+                    input.Add(line);
+                }
+            }
         }
     }
 }
