@@ -14,13 +14,45 @@ namespace Day04
 
         public void PrintBoard()
         {
-            _board.ForEach(line => line.ForEach(entry => Console.Write(entry + " ")));
+            Console.WriteLine("---------");
+            foreach(var line in _board)
+            {
+                line.ForEach(entry => Console.Write( entry  + " ")); ;
+                Console.WriteLine();
+            }
         }
 
-        public bool CheckBoard(string number)
+        public bool WinCondition()
         {
+            foreach(var line in _board)
+            {   
+                bool col = true;
+                foreach(var entry in line)
+                {
+                    if (entry != "X")
+                    {
+                        col = false;
+                    }
+                }
+                if (col) return true;
+            }
 
-            return true;
+            return false;
+        }
+
+        public int CheckBoard(string number)
+        {
+            foreach(var line in _board)
+            {
+                for (int i=0; i < line.Count; i++)
+                {
+                    if (line[i] == number)
+                    {
+                        line[i] = "X";
+                    }
+                }
+            }
+            return -1;
         }
     }
     class Program
@@ -33,25 +65,29 @@ namespace Day04
             List<string> lines = new List<String>(File.ReadAllLines(currentFile));
             string instructions = lines[0];
             lines.RemoveAt(0);
-            Board newBoard;
+            List<Board> allBoards = new List<Board>();
             List<string> input = new List<string>();
             foreach (string line in lines)
             {
-
                 if (line == "")
                 {   
                     if (input.Count > 0)
                     {
-                        newBoard = new Board(input);
-                        Console.WriteLine("New Board:");
-                        newBoard.PrintBoard();
+                        allBoards.Add(new Board(input));
                         input.Clear();
+                        continue;
                     }
-                } else
-                {
-                    input.Add(line);
-                }
+                } 
+                input.Add(line);
             }
+            allBoards.Add(new Board(input));
+            string[] numberCallOuts = instructions.Split(",");
+            Console.WriteLine(numberCallOuts.Length);
+            for (int i=0; i < 5; i++)
+            {
+                allBoards.ForEach(board => board.CheckBoard(numberCallOuts[i]));
+            }
+            allBoards.ForEach(board => board.PrintBoard());
         }
     }
 }
