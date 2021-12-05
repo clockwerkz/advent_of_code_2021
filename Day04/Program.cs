@@ -7,9 +7,14 @@ namespace Day04
     public class Board
     {
         private List<List<string>> _board = new List<List<string>>();
+        private bool _hasWon = false;
         public Board(List<string> board)
         {
-            board.ForEach(line => _board.Add(new List<string>(line.Split(' '))));
+            foreach (string line in board)
+            {
+                string[] row = line.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                _board.Add(new List<string>(row));
+            } 
         }
 
         public void PrintBoard()
@@ -17,27 +22,59 @@ namespace Day04
             Console.WriteLine("---------");
             foreach(var line in _board)
             {
-                line.ForEach(entry => Console.Write( entry  + " ")); ;
+                line.ForEach(entry => Console.Write(entry  + " ")); ;
                 Console.WriteLine();
             }
+        }
+
+        public bool HasWon()
+        {
+            return _hasWon;
         }
 
         public bool WinCondition()
         {
             foreach(var line in _board)
             {   
-                bool col = true;
                 foreach(var entry in line)
                 {
-                    if (entry != "X")
+                    string currentLine = String.Join("", line.ToArray());
+                    if (currentLine == "XXXXX")
                     {
-                        col = false;
+                        return true;
                     }
                 }
-                if (col) return true;
+            }
+            for (int i=0; i < _board[0].Count; i++)
+            {
+                bool row = true;
+                for (int j=0; j < _board.Count; j++)
+                {
+                    if (_board[j][i] != "X")
+                    {
+                        row = false;
+                    }
+                }
+                if (row) return true;
             }
 
             return false;
+        }
+
+        private int SumBoard()
+        {
+            int sum = 0;
+            foreach (var row in _board)
+            {
+                foreach(var col in row)
+                {
+                    if (col != "X")
+                    {
+                        sum += Int32.Parse(col);
+                    }
+                }
+            }
+            return sum;
         }
 
         public int CheckBoard(string number)
@@ -49,6 +86,11 @@ namespace Day04
                     if (line[i] == number)
                     {
                         line[i] = "X";
+                        if (WinCondition())
+                        {
+                            _hasWon = true;
+                            return Int32.Parse(number) * SumBoard();
+                        }
                     }
                 }
             }
@@ -61,7 +103,8 @@ namespace Day04
         {
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            string currentFile = projectDirectory + "\\Sample.txt";
+            Console.WriteLine("---DAY 4: PART 2---");
+            string currentFile = projectDirectory + "\\Day4Input.txt";
             List<string> lines = new List<String>(File.ReadAllLines(currentFile));
             string instructions = lines[0];
             lines.RemoveAt(0);
@@ -81,13 +124,28 @@ namespace Day04
                 input.Add(line);
             }
             allBoards.Add(new Board(input));
+            Console.WriteLine("Number of bingo boards: " + allBoards.Count);
             string[] numberCallOuts = instructions.Split(",");
-            Console.WriteLine(numberCallOuts.Length);
-            for (int i=0; i < 5; i++)
+            int secretCode = -1;
+            int currentCount = 1;
+            for (int i=0; i < numberCallOuts.Length; i++)
             {
-                allBoards.ForEach(board => board.CheckBoard(numberCallOuts[i]));
+                foreach(var board in allBoards)
+                {
+                    if (board.HasWon()) continue;
+                    int res = board.CheckBoard(numberCallOuts[i]);
+                    if (res > 0)
+                    {
+                        Console.WriteLine("BINGO!! board #" + currentCount++ + " WINS!!");
+                        secretCode = res;
+                    }
+                }
+                if (secretCode > 0)
+                {
+                    Console.WriteLine("Code to enter: " + secretCode);
+                    secretCode = -1;
+                }
             }
-            allBoards.ForEach(board => board.PrintBoard());
         }
     }
 }
