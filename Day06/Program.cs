@@ -14,13 +14,13 @@ namespace Day06
             string currentFile = projectDirectory + "\\Day6Input.txt";
             string[] lines = File.ReadAllLines(currentFile);
             int days = 1;
-            List<int> school = new List<int>();
-            string[] parseData = lines[0].Split(",");
-            foreach (var initialFish in parseData)
-            {
-                school.Add(Int32.Parse(initialFish));
-            }
-            while (days <= 80)
+            List<int> school = new List<int> { 3, 4, 3, 1, 2};
+            //string[] parseData = lines[0].Split(",");
+            //foreach (var initialFish in parseData)
+            //{
+            //    school.Add(Int32.Parse(initialFish));
+            //}
+            while (days <= 256)
             {
                 int fishToSpawn = 0;
                 for (int i=0; i < school.Count; i++)
