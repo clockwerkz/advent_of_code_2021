@@ -37,7 +37,7 @@ namespace Day05
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
             Console.WriteLine("---DAY 5: PART 1---");
-            string currentFile = projectDirectory + "\\Sample.txt";
+            string currentFile = projectDirectory + "\\Day5Input.txt";
             int maxX = 0;
             int maxY = 0;
             string[] lines = File.ReadAllLines(currentFile);
@@ -66,7 +66,6 @@ namespace Day05
             {
                 DrawLine(board, line);
             }
-            PrintBoard(board);
             Console.WriteLine("Values that are 2 or greater: " + CountTwoOrMore(board));
         }
 
@@ -86,23 +85,24 @@ namespace Day05
         {
             if (IsDiagonal(line.Start, line.End))
             {
-                int y;
-                Console.WriteLine("Points: " + line.Start.ToString() + " and " + line.End.ToString());
-                if (line.Start.X < line.End.X)
+                int slopeX = line.Start.X < line.End.X ? 1 : -1;
+                int slopeY = line.Start.Y < line.End.Y ? 1 : -1;
+                int y = line.Start.Y;
+                if (slopeX > 0)
                 {
-                    y = line.End.Y;
-                    for (int x = line.Start.X; x <= line.End.X; x++)
+                 
+                    for (int x=line.Start.X; x <=line.End.X; x++)
                     {
-                        board[x, y--]++;
+                        board[x, y]++;
+                        y += slopeY;
                     }
                     return;
                 }
-                /*
-                y = line.Start.Y;
-                for (int x = line.Start.X; x <= line.End.X; x++)
+                for (int x=line.Start.X; x >=line.End.X; x--)
                 {
-                    board[x, y++]++;
-                }*/
+                    board[x, y]++;
+                    y += slopeY;
+                }
                 return;
                 
             }
