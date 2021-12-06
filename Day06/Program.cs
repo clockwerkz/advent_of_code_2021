@@ -15,40 +15,51 @@ namespace Day06
             string[] lines = File.ReadAllLines(currentFile);
             int days = 1;
             List<int> school = new List<int> { 3, 4, 3, 1, 2};
-            //string[] parseData = lines[0].Split(",");
-            //foreach (var initialFish in parseData)
-            //{
-            //    school.Add(Int32.Parse(initialFish));
-            //}
+            school.Clear();
+            string[] parseData = lines[0].Split(",");
+            foreach (var initialFish in parseData)
+            {
+                school.Add(Int32.Parse(initialFish));
+            }
+            
+            long[] fishCount = new long[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            foreach (int fish in school)
+            {
+                fishCount[fish]++;
+            }
             while (days <= 256)
             {
-                int fishToSpawn = 0;
-                for (int i=0; i < school.Count; i++)
+                long zeroCount = fishCount[0];
+                for (int i=0; i < fishCount.Length-1; i++)
                 {
-                    if (school[i] == 0)
-                    {
-                        school[i] = 6;
-                        fishToSpawn++;
-                    } else {
-                        school[i]--;
-                    }
-                }
-                for (int i=0; i < fishToSpawn; i++)
-                {
-                    school.Add(8);
+                    fishCount[i] = fishCount[i + 1];
                 }
                 //Console.WriteLine("After Day "+days+":");
                 //printSchool(school);
                 days++;
-
+                fishCount[6] += zeroCount;
+                fishCount[8] = zeroCount;
             }
-            Console.Write("After " + (days - 1) + " days the anglerfish count is: " + school.Count);
+            printSchool(fishCount);
+            Console.Write("After " + (days - 1) + " days the anglerfish count is: " + totalFishCount(fishCount));
         }
 
-        static void printSchool(List<int> school)
+        static void printSchool(long[] fishCount)
         {
-            school.ForEach(fish => Console.Write(fish + " "));
-            Console.WriteLine();
+            for (int i=0; i < fishCount.Length; i++)
+            {
+                Console.WriteLine("total fish in position " + i + ": " + fishCount[i]);
+            }
+        }
+
+        static long totalFishCount(long[] fishCount)
+        {
+            long sum = 0;
+            for (int i=0; i < fishCount.Length; i++)
+            {
+                sum += fishCount[i];
+            }
+            return sum;
         }
     }
 
