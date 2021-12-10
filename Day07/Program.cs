@@ -8,6 +8,7 @@ namespace Day07
     {
         static void Main(string[] args)
         {
+            Dictionary<int, int> hashMap = new Dictionary<int, int>();
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
             Console.WriteLine("---DAY 7: PART 1---");
@@ -20,7 +21,9 @@ namespace Day07
             {
                 CrabLocations.Add(int.Parse(entry));
             }
-            int[] sampleSet = new int[] { 16, 1, 2, 0, 4, 2, 7, 1, 2, 14 };
+            //CrabLocations.Clear();
+            //int[] sampleSet = new int[] { 16, 1, 2, 0, 4, 2, 7, 1, 2, 14 };
+            //CrabLocations.AddRange(sampleSet);
             int max = -1;
             int min = int.MaxValue;
             foreach(int val in CrabLocations)
@@ -32,13 +35,28 @@ namespace Day07
                 int sum = 0;
                 foreach(int val in CrabLocations)
                 {
-                    sum += Math.Abs(val - col);
+                    sum += CalculateCorrectDistance(Math.Abs(val - col), hashMap);
                 }
                 min = Math.Min(min, sum);
                 sum = 0;
             };
             //Console.WriteLine("Minimum Moves required from test data should be 37: " + min);
             Console.WriteLine("Minimum Moves required from Day 7 Input data: " + min);
+        }
+
+        static int CalculateCorrectDistance(int val, Dictionary<int, int> hashMap)
+        {
+            int calculatedValue;
+            if (hashMap.TryGetValue(val, out calculatedValue))
+            {
+                return calculatedValue;
+            }
+            for (int i=1; i <= val; i++)
+            {
+                calculatedValue += i;
+            }
+            hashMap.Add(val, calculatedValue);
+            return calculatedValue;
         }
     }
 }
