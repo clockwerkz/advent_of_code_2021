@@ -11,7 +11,7 @@ namespace Day09
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
             Console.WriteLine("---DAY 9: PART 1---");
-            string currentFile = projectDirectory + "\\Sample.txt";
+            string currentFile = projectDirectory + "\\Day9Input.txt";
             string[] lines = File.ReadAllLines(currentFile);
             List<int[]> data = new List<int[]>();
             foreach(string line in lines)
@@ -19,21 +19,19 @@ namespace Day09
            
                 int[] row = new int[line.Length];
                 int i = 0;
-                foreach(var c in line)
+                foreach(char c in line)
                 {
-                    Console.Write(c + " ");
-                    row[i++] = int.Parse(c);
+                    row[i++] = c - '0';
                 }
-                Console.WriteLine();
                 data.Add(row);
             }
             int riskLevel = 0;
             for (int i=0; i < data.Count; i++)
             {
-                bool lowestPoint = true;
                 for (int j=0; j < data[i].Length; j++)
                 {
-                    if (j < 0)
+                    bool lowestPoint = true;
+                    if (j > 0)
                     {
                         if (data[i][j] >= data[i][j - 1])
                         {
@@ -47,7 +45,7 @@ namespace Day09
                             lowestPoint = false;
                         }
                     }
-                    if (i < 0)
+                    if (i > 0)
                     {
                         if (data[i][j] >= data[i-1][j])
                         {
@@ -63,7 +61,6 @@ namespace Day09
                     }
                     if (lowestPoint)
                     {
-                        Console.WriteLine("[" + i + ", " + j + "]: " + data[i][j]);
                         riskLevel += 1 + data[i][j];
                     }
                 }
